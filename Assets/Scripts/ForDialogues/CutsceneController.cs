@@ -9,7 +9,6 @@ public class CutsceneController : MonoBehaviour
     [SerializeField] private PlayableDirector _cutscene;
     [SerializeField] private GameObject _buttonSkipCutscene;
     private int _numberPlayable = 0;
-    private bool _isSkipCutscene;
 
     private void Update()
     {
@@ -20,12 +19,6 @@ public class CutsceneController : MonoBehaviour
         else
         {
             _buttonSkipCutscene.SetActive(false);
-        }
-
-        if (_isSkipCutscene == true && _cutscene.time != 0f)
-        {
-            SkipCutscene();
-            _isSkipCutscene = false;
         }
     }
 
@@ -62,13 +55,15 @@ public class CutsceneController : MonoBehaviour
 
     public void SkipCutscene()
     {
-        _cutscene.time = _cutscene.duration;
-        _cutscene.Evaluate();
-        _isSkipCutscene = false;
+        if (_cutscene.state == PlayState.Playing) // проверяем, что катсцена реально идёт
+        {
+            SkipCutscene();
+        }
     }
 
     public void OnSkipButtonDown()
     {
-        _isSkipCutscene = true;
+        _cutscene.time = _cutscene.duration;
+        _cutscene.Evaluate(); ;
     }
 }
